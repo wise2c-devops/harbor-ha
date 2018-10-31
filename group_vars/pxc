@@ -1,0 +1,7 @@
+pxc_dir: /data/pxc
+pxc_password: abc@12345
+sst_password: sst@12345
+keepalived_rid: 11
+keepalived_interface: ens32
+keepalived_vrid: 111
+keepalived_vip: 192.168.92.141

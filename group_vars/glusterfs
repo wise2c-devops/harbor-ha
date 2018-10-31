@@ -1,0 +1,5 @@
+brick_dir: /data/glusterfs/gv0
+keepalived_rid: 10
+keepalived_interface: ens32
+keepalived_vrid: 110
+keepalived_vip: 192.168.92.140 

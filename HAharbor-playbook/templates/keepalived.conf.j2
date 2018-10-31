@@ -1,0 +1,28 @@
+! Configuration File for keepalived
+
+global_defs {
+   router_id {{ keepalived_rid  }}
+}
+
+vrrp_instance VI_1 {
+  {% for host in ansible_play_batch -%}
+    {% if host == inventory_hostname -%}
+      {% if loop.index == 1 -%}
+        state MASTER
+      {% else -%}
+        state BACKUP
+      {% endif -%}
+    {% endif -%}
+  {% endfor -%}
+    interface {{ keepalived_interface  }}
+    virtual_router_id {{ keepalived_vrid  }}
+    priority 100
+    advert_int 1
+    authentication {
+        auth_type PASS
+        auth_pass 125
+    }
+    virtual_ipaddress {
+        {{ keepalived_vip }}
+    }
+}

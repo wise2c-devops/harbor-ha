@@ -1,0 +1,32 @@
+[client]
+socket={{ pxc_dir }}/mysql/mysql.sock
+
+[mysqld]
+datadir={{ pxc_dir }}/mysql
+socket={{ pxc_dir }}/mysql/mysql.sock
+log-error=/var/log/mysqld.log
+pid-file={{ pxc_dir }}/mysqld/mysqld.pid
+log-bin
+log_slave_updates
+expire_logs_days=7
+
+# Disabling symbolic-links is recommended to prevent assorted security risks
+symbolic-links=0
+
+{% for host in ansible_play_batch -%}
+{% if host == inventory_hostname -%}
+server-id={{ loop.index  }}
+{% endif -%}
+{% endfor -%}
+
+binlog_format=ROW
+default_storage_engine=InnoDB
+innodb_autoinc_lock_mode=2
+
+!include /etc/wsrep.cnf
+
+[mysqld_safe]
+pid-file = {{ pxc_dir }}/mysqld/mysqld.pid
+socket   = {{ pxc_dir }}/mysql/mysql.sock
+nice     = 0
+

@@ -1,0 +1,107 @@
+---
+- hosts: harbor
+  vars:
+  - cpath: /data
+  - version: v1.5.3
+  - hapath: /data/harborHA 
+  tasks: 
+  - name: install GlusterFS-client
+    yum: 
+      name: glusterfs-client
+      state: present
+      
+  - name: install mysql-client
+    yum:
+      name: mysql
+      state: present
+      
+  - name: Ensure Gluster volume is mounted.
+    mount:
+      path: "{{ hapath }}"
+      src: "{{ gfs_ip }}:/gv0"
+      fstype: glusterfs
+      opts: "defaults,_netdev"
+      state: mounted
+    tags:
+      - mount
+
+  - name: unarchive harbor
+    unarchive:
+      src: files/harbor-offline-installer-{{ version }}.tgz
+      dest: '{{ cpath }}'
+    tags: 
+      - scp
+
+  - name: copy sqlfile
+    copy:
+      src: '{{ item.src }}'
+      dest: '{{ item.dest }}'
+    with_items:
+    - { src: 'files/registry.sql', dest: '{{ cpath }}' }
+    when: inventory_hostname == ansible_play_batch[0]
+
+  - name: load data
+    shell: |
+      mysql -uroot -p'{{ pxc_password }}' -h'{{ pxc_ip }}' -e "set global pxc_strict_mode=PERMISSIVE;"
+      mysql -uroot -p'{{ pxc_password }}' -h'{{ pxc_ip }}' < {{ cpath }}/registry.sql
+      mysql -uroot -p'{{ pxc_password }}' -h'{{ pxc_ip }}' -e "set global pxc_strict_mode=ENFORCING;"
+    when: inventory_hostname == ansible_play_batch[0]
+
+  - name: generation config
+    template:
+      src: '{{ item.src }}'
+      dest: '{{ item.dest }}'
+    with_items:
+    - { src: 'templates/harbor.cfg.j2', dest: '{{ cpath }}/harbor/harbor.cfg' }
+    - { src: 'templates/docker-compose.yml.j2', dest: '{{ cpath }}/harbor/docker-compose.yml' }
+
+  - name: launch registry
+    shell: ./install.sh --with-clair
+    args:
+      chdir: '{{ cpath }}/harbor'
+
+  - name: install haproxy
+    yum:
+      name: haproxy
+      state: present
+    tags:
+      - haproxy
+
+  - name: config haproxy
+    template:
+      src: templates/haproxy.cfg.j2
+      dest: /etc/haproxy/haproxy.cfg
+    tags:
+      - haproxy
+      - haproxy_conf
+
+  - name: enable haproxy
+    systemd:
+      name: haproxy
+      state: started
+      enabled: yes
+    tags:
+      - haproxy
+
+  - name: install keepalived
+    yum:
+      name: keepalived
+      state: present
+    tags:
+      - keepalived
+
+  - name: config keepalived
+    template:
+      src: templates/keepalived.conf.j2
+      dest: /etc/keepalived/keepalived.conf
+    tags:
+      - keepalived
+
+  - name: enable keepalived
+    systemd:
+      name: keepalived
+      state: started
+      enabled: yes
+    tags:
+      - keepalived
+

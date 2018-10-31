@@ -1,0 +1,16 @@
+version: '2'
+services:
+  yum-repo:
+    container_name: deploy-yumrepo
+    image: shonge/yum-repo:HAharbor
+    ports:
+    - 2009:2009 
+    restart: always
+  playbook:
+    container_name: deploy-playbook
+    image: shonge/playbook:master
+    volumes:
+    - /root/.ssh:/root/.ssh
+    - ./hosts:/workspace/hosts
+    - ./group_vars:/workspace/group_vars
+    restart: always

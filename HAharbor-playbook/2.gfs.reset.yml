@@ -1,0 +1,49 @@
+---
+- hosts: glusterfs
+  tasks:
+  - name: shutdown keepalived
+    systemd:
+      name: keepalived
+      state: stopped
+      enabled: no
+    ignore_errors: yes
+    tags:
+      - keepalived
+
+  - name: remove keepalived
+    yum:
+      name: keepalived
+      state: absent
+    tags:
+      - keepalived
+
+  - name: stop gluster volume
+    gluster_volume:
+      state: stopped
+      name: gv0
+    ignore_errors: yes
+
+  - name: remove gluster volume
+    gluster_volume:
+      state: absent
+      name: gv0
+    ignore_errors: yes
+
+  - name: shutdown glusterd
+    systemd:
+      name: glusterd
+      state: stopped
+      enabled: no
+    ignore_errors: yes
+
+  - name: remove glusterfs
+    yum:
+      name: glusterfs-server
+      state: absent
+
+  - name: remove gfs dir
+    file:
+      path: '{{ item }}'
+      state: absent
+    with_items:
+      - '{{ brick_dir }}'
