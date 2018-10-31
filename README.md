@@ -1,4 +1,4 @@
-# Deploy HA harbor with ansible
+# Deploy Harbor HA with ansible
 *Wise2C ansible playbook to deploy Harbor HA with GlusterFS and Percorna XtraDB Cluster*
 ![alt](.manual/architecture.png)
 
