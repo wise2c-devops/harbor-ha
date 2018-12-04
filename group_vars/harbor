@@ -1,9 +1,0 @@
-gfs_ip: 192.168.92.141
-pxc_ip: 192.168.92.141
-registry: 192.168.92.141
-pxc_password: abc@12345
-harbor_password: Harbor12345
-keepalived_rid: 12
-keepalived_interface: ens32
-keepalived_vrid: 112
-keepalived_vip: 192.168.92.141

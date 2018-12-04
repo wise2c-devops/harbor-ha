@@ -8,7 +8,7 @@ services:
     restart: always
   playbook:
     container_name: deploy-playbook
-    image: shonge/playbook:master
+    image: shonge/playbook:cmft
     volumes:
     - /root/.ssh:/root/.ssh
     - ./hosts:/workspace/hosts

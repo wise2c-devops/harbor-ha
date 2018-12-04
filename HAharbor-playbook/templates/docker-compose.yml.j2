@@ -1,7 +1,7 @@
 version: '2'
 services:
   log:
-    image: vmware/harbor-log:v1.5.3
+    image: goharbor/harbor-log:v1.6.2
     container_name: harbor-log 
     restart: always
     volumes:
@@ -12,7 +12,7 @@ services:
     networks:
       - harbor
   registry:
-    image: vmware/registry-photon:v2.6.2-v1.5.3
+    image: goharbor/registry-photon:v2.6.2-v1.6.2
     container_name: registry
     restart: always
     volumes:
@@ -31,25 +31,8 @@ services:
       options:  
         syslog-address: "tcp://127.0.0.1:1514"
         tag: "registry"
-  mysql:
-    image: vmware/harbor-db:v1.5.3
-    container_name: harbor-db
-    restart: always
-    volumes:
-      - {{ hapath }}/database:/var/lib/mysql:z
-    networks:
-      - harbor
-    env_file:
-      - ./common/config/db/env
-    depends_on:
-      - log
-    logging:
-      driver: "syslog"
-      options:  
-        syslog-address: "tcp://127.0.0.1:1514"
-        tag: "mysql"
   adminserver:
-    image: vmware/harbor-adminserver:v1.5.3
+    image: goharbor/harbor-adminserver:v1.6.2
     container_name: harbor-adminserver
     env_file:
       - ./common/config/adminserver/env
@@ -68,7 +51,7 @@ services:
         syslog-address: "tcp://127.0.0.1:1514"
         tag: "adminserver"
   ui:
-    image: vmware/harbor-ui:v1.5.3
+    image: goharbor/harbor-ui:v1.6.2
     container_name: harbor-ui
     env_file:
       - ./common/config/ui/env
@@ -92,7 +75,7 @@ services:
         syslog-address: "tcp://127.0.0.1:1514"
         tag: "ui"
   jobservice:
-    image: vmware/harbor-jobservice:v1.5.3
+    image: goharbor/harbor-jobservice:v1.6.2
     container_name: harbor-jobservice
     env_file:
       - ./common/config/jobservice/env
@@ -100,10 +83,10 @@ services:
     volumes:
       - {{ hapath }}/job_logs:/var/log/jobs:z
       - ./common/config/jobservice/config.yml:/etc/jobservice/config.yml:z
+      - {{ hapath }}/secretkey:/etc/jobservice/key:z
     networks:
       - harbor
     depends_on:
-      - redis
       - ui
       - adminserver
     logging:
@@ -111,23 +94,8 @@ services:
       options:  
         syslog-address: "tcp://127.0.0.1:1514"
         tag: "jobservice"
-  redis:
-    image: vmware/redis-photon:v1.5.3
-    container_name: redis
-    restart: always
-    volumes:
-      - {{ hapath }}/redis:/data
-    networks:
-      - harbor
-    depends_on:
-      - log
-    logging:
-      driver: "syslog"
-      options:  
-        syslog-address: "tcp://127.0.0.1:1514"
-        tag: "redis"
   proxy:
-    image: vmware/nginx-photon:v1.5.3
+    image: goharbor/nginx-photon:v1.6.2
     container_name: nginx
     restart: always
     volumes:
@@ -139,7 +107,6 @@ services:
       - 443:443
       - 4443:4443
     depends_on:
-      - mysql
       - registry
       - ui
       - log

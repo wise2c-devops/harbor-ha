@@ -1,0 +1,21 @@
+---
+- hosts: harbor
+  tasks: 
+  - name: unarchive harbor
+    unarchive:
+      src: files/harbor-offline-installer-{{ version }}.tgz
+      dest: '{{ cpath }}'
+    tags: 
+      - scp
+  - name: generation config
+    template:
+      src: '{{ item.src }}'
+      dest: '{{ item.dest }}'
+    with_items:
+    - { src: 'templates/harbor.cfg.j2', dest: '{{ cpath }}/harbor/harbor.cfg' }
+    - { src: 'templates/docker-compose.yml.j2', dest: '{{ cpath }}/harbor/docker-compose.yml' }
+
+  - name: launch registry
+    shell: ./install.sh
+    args:
+      chdir: '{{ cpath }}/harbor'

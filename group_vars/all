@@ -1,1 +1,17 @@
+version: v1.6.2
 yumrepo: 192.168.92.139
+harbor_vip: harbor.io
+harbor_protocol: https
+cpath: /data
+hapath: /data/HAharbor
+ssl_cert: server.crt
+ssl_cert_key: server.key
+db_host: 192.168.92.140
+db_password: root123
+db_port: 5432
+db_user: postgres
+redis_host: 192.168.92.140
+redis_port: 6379
+registry_storage_provider_name: s3
+registry_storage_provider_config: bucket: harbor-registry, region: default, accesskey: s3accesskey, secretkey: s3secretkey, regionendpoint: http://192.168.92.141:80
+
