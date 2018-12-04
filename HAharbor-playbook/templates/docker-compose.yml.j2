@@ -98,6 +98,8 @@ services:
     image: goharbor/nginx-photon:v1.6.2
     container_name: nginx
     restart: always
+    entrypoint:
+      - /etc/nginx/healthcheck.sh
     volumes:
       - ./common/config/nginx:/etc/nginx:z
     networks:
