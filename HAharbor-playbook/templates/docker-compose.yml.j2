@@ -102,6 +102,7 @@ services:
       - /etc/nginx/healthcheck.sh
     volumes:
       - ./common/config/nginx:/etc/nginx:z
+      - ./healthcheck.sh:/etc/nginx/healthcheck.sh
     networks:
       - harbor
     ports:
