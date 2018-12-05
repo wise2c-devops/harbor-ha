@@ -2,7 +2,7 @@ sudo: required
 
 branches:
   only:
-  - cmft
+  - only-harbor
 
 
 services:
