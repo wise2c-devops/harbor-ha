@@ -13,4 +13,5 @@ services:
     - /root/.ssh:/root/.ssh
     - ./hosts:/workspace/hosts
     - ./group_vars:/workspace/group_vars
+    - ./cert:/workspace/cert
     restart: always
