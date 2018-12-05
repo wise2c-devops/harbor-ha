@@ -16,6 +16,12 @@
       path: '{{ item }}'
       state: absent
     with_items:
-    - "{{ hapath }}/*"
+    - "/var/log/harbor"
+    - "{{ hapath }}/ca_download"
+    - "{{ hapath }}/config"
+    - "{{ hapath }}/job_logs"
+    - "{{ hapath }}/psc"
+    - "{{ hapath }}/regisftry"
+    - "{{ hapath }}/secretkey"
     - "{{ cpath  }}/harbor"
 
