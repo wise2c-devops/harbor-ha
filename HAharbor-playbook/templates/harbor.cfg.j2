@@ -17,7 +17,7 @@ max_job_workers = 10
 #If the value is on, the prepare script creates new root cert and private key 
 #for generating token to access the registry. If the value is off the default key/cert will be used.
 #This flag also controls the creation of the notary signer's cert.
-customize_crt = on
+customize_crt = off
 
 #The path of cert and key files for nginx, they are applied only the protocol is set to https
 ssl_cert = {{ cpath }}/{{ ssl_cert }}
