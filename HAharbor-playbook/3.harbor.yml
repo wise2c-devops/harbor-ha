@@ -14,13 +14,20 @@
     with_items:
     - { src: 'templates/harbor.cfg.j2', dest: '{{ cpath }}/harbor/harbor.cfg' }
     - { src: 'templates/docker-compose.yml.j2', dest: '{{ cpath }}/harbor/docker-compose.yml' }
+  - name: launch registry
+    shell: ./install.sh
+    args:
+      chdir: '{{ cpath }}/harbor'
   - name: copy proxy healthcheck
     copy:
       src: '{{ item.src }}'
       dest: '{{ item.dest }}'
     with_items:
     - { src: 'scripts/healthcheck.sh', dest: '{{ cpath }}/harbor/common/config/nginx' }    
-  - name: launch registry
-    shell: ./install.sh
-    args:
-      chdir: '{{ cpath }}/harbor'
+  - name: copy cert 
+    copy:
+      src: '{{ item.src }}'
+      dest: '{{ item.dest }}'
+    with_items:
+    - { src: 'cert/{{ ssl_cert }}', dest: '{{ hpath }}' }
+    - { src: 'cert/{{ ssl_cert_key }}', dest: '{{ hpath }}' }
