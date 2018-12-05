@@ -10,6 +10,7 @@
       project_src: '{{ cpath }}/harbor'
       state: absent
       remove_volumes: true
+    ignore_errors: yes
   
   - name: clean registry directory
     file:
@@ -24,4 +25,3 @@
     - "{{ hapath }}/regisftry"
     - "{{ hapath }}/secretkey"
     - "{{ cpath  }}/harbor"
-
