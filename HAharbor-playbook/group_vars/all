@@ -2,6 +2,7 @@ version: v1.6.2
 yumrepo: 192.168.92.139
 harbor_vip: harbor.io
 harbor_protocol: https
+harbor_admin_password: Harbor12345
 cpath: /data
 hapath: /data/HAharbor
 ssl_cert: server.crt
