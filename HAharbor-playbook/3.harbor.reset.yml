@@ -1,9 +1,6 @@
 ---
 - hosts: harbor
   vars:
-  - cpath: /data
-  - version: v1.6.2
-  - hapath: /data/harborHA 
   tasks: 
   - name: stop & rm registry
     docker_service:
@@ -22,6 +19,6 @@
     - "{{ hapath }}/config"
     - "{{ hapath }}/job_logs"
     - "{{ hapath }}/psc"
-    - "{{ hapath }}/regisftry"
+    - "{{ hapath }}/registry"
     - "{{ hapath }}/secretkey"
     - "{{ cpath  }}/harbor"
