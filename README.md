@@ -1,6 +1,6 @@
 # Deploy Harbor HA with ansible
 *Wise2C ansible playbook to deploy Harbor HA with GlusterFS and Percorna XtraDB Cluster*
-![alt](img/Harbor\ High\ Availability\ Architecture.jpg)
+![alt](.manual/architecture.jpg)
 
 **Before_install:  
 需要配置部署机对目标机进行SSH免密登录**
